@@ -154,7 +154,7 @@ class smartStore(QWidget, form_class):
     def order_btn(self):
         # if self.loginYN == True:
         self.stackedWidget.setCurrentIndex(3)
-        # else:
+        # else:a
         #     QMessageBox.information(self, "주문관리", "로그인해야 이용가능합니다")
 
 
