@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import uic, QtWidgets, QtCore
+from PyQt5 import uic
 import pymysql
 
 menu_form = uic.loadUiType("menu.ui")[0]
