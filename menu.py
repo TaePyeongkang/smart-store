@@ -14,6 +14,7 @@ class MenuWidget(QWidget, menu_form):
         self.addMenu.clicked.connect(self.add_menu)
         self.printStuff.clicked.connect(self.print_stuff)
         self.addStuff.clicked.connect(self.add_stuff)
+        self.stuffMenu.returnPressed.connect(self.print_stuff)
 
     def print_menu(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
@@ -46,9 +47,14 @@ class MenuWidget(QWidget, menu_form):
     def add_stuff(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
         curs = conn.cursor()
-        curs.execute("")
+        curs.execute("insert into store.bom values ('%s', '%s', '%s', '%s', %f, %f, %d)" %
+                     (self.stuffMenu.text(), self.stuffName.text(), self.hsCode.text(), self.whereFrom.text(),
+                      int(self.heavy.text()), int(self.onePrice.text()), int(self.allPrice.text())))
+        conn.commit()
+        self.print_stuff()
 
 
+# 테스트
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
