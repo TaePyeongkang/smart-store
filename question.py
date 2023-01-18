@@ -15,7 +15,7 @@ class QuestionWidget(QWidget, quest_form):
         self.questions.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.printQuestions.clicked.connect(self.print_questions)
         self.questions.cellClicked.connect(self.print_text)
-        # self.checking = Checking()
+        # self.checking = Checking(self)
         # self.checking.start()
 
     # def move_menu(self):
@@ -63,17 +63,14 @@ class QuestionWidget(QWidget, quest_form):
 
 
 # class Checking(QThread):
-#     def __init__(self):
-#         super().__init__()
-#         self.titles = None
+#     def __init__(self, parent):
+#         super().__init__(parent)
+#         self.parent = parent
 #
 #     def run(self):
 #         while True:
 #             conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
 #             curs = conn.cursor()
-#             curs.execute("select question_title from store.question where checked = '미확인'")
-#             self.titles = curs.fetchall()
-#             conn.close()
 
 
 if __name__ == "__main__":

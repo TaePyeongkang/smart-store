@@ -8,9 +8,11 @@ from datetime import datetime
 
 form_class = uic.loadUiType('smartstore.ui')[0]
 
-class smartStore(QWidget, form_class):
+
+class SmartStore(QWidget, form_class):
     def __init__(self):
         super().__init__()
+        self.menu_check = None
         self.setupUi(self)
         self.loginYN = False
         self.stackedWidget.setCurrentIndex(0)
@@ -51,9 +53,6 @@ class smartStore(QWidget, form_class):
         self.stackedWidget.setCurrentIndex(3)
         QMessageBox.information(self, "알림", f"{self.menu1.text()}{self.menu1count.value()}개")
 
-
-
-
     def order_list(self):
         conn = pymysql.connect(host='10.10.21.119', port=3306, user='yh', password='00000000', db='smart-store',
                                charset='utf8')
@@ -77,7 +76,7 @@ class smartStore(QWidget, form_class):
             QMessageBox.critical(self, "에러", "빈칸을 전부 입력해주세요")
         elif self.join_pw.text() != self.join_pw_2.text():
             QMessageBox.critical(self, "에러", "비밀번호와 비밀번호확인이 일치하지 않습니다.")
-        elif self.join_double_check == False:
+        elif not self.join_double_check:
             QMessageBox.critical(self, "에러", "중복확인을 해주세요")
         else:
             conn = pymysql.connect(host='10.10.21.119', port=3306, user='yh', password='00000000', db='smart-store',
@@ -121,7 +120,6 @@ class smartStore(QWidget, form_class):
     #     if self.join_double_check == False:
     #         QMessageBox.critical(self, "에러", "중복체크 다시해주세요")
 
-
     def Login(self):  # 로그인 할때
 
         self.id = self.login_id.text()  # 입력한 값이 id
@@ -157,7 +155,6 @@ class smartStore(QWidget, form_class):
         # else:a
         #     QMessageBox.information(self, "주문관리", "로그인해야 이용가능합니다")
 
-
     def joinPage(self): # 회원가입 페이지로 이동
         self.join_double_check = False
         self.stackedWidget.setCurrentIndex(2)
@@ -169,13 +166,12 @@ class smartStore(QWidget, form_class):
         self.stackedWidget.setCurrentIndex(0)
 
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     widget = QtWidgets.QStackedWidget()
 
-    mainWindow = smartStore()
+    mainWindow = SmartStore()
 
     widget.addWidget(mainWindow)
 
