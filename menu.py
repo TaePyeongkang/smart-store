@@ -10,11 +10,21 @@ class MenuWidget(QWidget, menu_form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.menu.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.menu.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.stuff.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.stuff.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.printMenu.clicked.connect(self.print_menu)
         self.addMenu.clicked.connect(self.add_menu)
         self.printStuff.clicked.connect(self.print_stuff)
         self.addStuff.clicked.connect(self.add_stuff)
         self.stuffMenu.returnPressed.connect(self.print_stuff)
+
+    # def move_order(self):
+    #     self.setCurrentIndex(2)
+
+    # def move_question(self):
+    #     self.setCurrentIndex(3)
 
     def print_menu(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
@@ -25,6 +35,7 @@ class MenuWidget(QWidget, menu_form):
         for i in range(len(menus)):
             for j in range(len(menus[i])):
                 self.menu.setItem(i, j, QTableWidgetItem(str(menus[i][j])))
+        conn.close()
 
     def add_menu(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
@@ -33,6 +44,7 @@ class MenuWidget(QWidget, menu_form):
                      (self.menuName.text(), int(self.menuPrice.text())))
         conn.commit()
         self.print_menu()
+        conn.close()
 
     def print_stuff(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
@@ -43,6 +55,7 @@ class MenuWidget(QWidget, menu_form):
         for i in range(len(stuff)):
             for j in range(len(stuff[i])):
                 self.stuff.setItem(i, j, QTableWidgetItem(str(stuff[i][j])))
+        conn.close()
 
     def add_stuff(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
@@ -52,6 +65,7 @@ class MenuWidget(QWidget, menu_form):
                       int(self.heavy.text()), int(self.onePrice.text()), int(self.allPrice.text())))
         conn.commit()
         self.print_stuff()
+        conn.close()
 
 
 # 테스트
