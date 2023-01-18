@@ -19,6 +19,7 @@ class MenuWidget(QWidget, menu_form):
         self.printStuff.clicked.connect(self.print_stuff)
         self.addStuff.clicked.connect(self.add_stuff)
         self.stuffMenu.returnPressed.connect(self.print_stuff)
+        self.menu.cellClicked.connect(self.cell_print_stuff)
 
     # def move_order(self):
     #     self.setCurrentIndex(2)
@@ -56,6 +57,10 @@ class MenuWidget(QWidget, menu_form):
             for j in range(len(stuff[i])):
                 self.stuff.setItem(i, j, QTableWidgetItem(str(stuff[i][j])))
         conn.close()
+
+    def cell_print_stuff(self):
+        self.stuffMenu.setText(self.menu.item(self.menu.currentRow(), 0).text())
+        self.print_stuff()
 
     def add_stuff(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
