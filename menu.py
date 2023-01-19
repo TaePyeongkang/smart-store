@@ -58,7 +58,6 @@ class MenuWidget(QWidget, menu_form):
                 self.stuff.setItem(i, j, QTableWidgetItem(str(stuff[i][j])))
         conn.close()
 
-
     def cell_print_stuff(self):
         self.stuffMenu.setText(self.menu.item(self.menu.currentRow(), 0).text())
         self.print_stuff()

@@ -37,7 +37,7 @@
    <property name="geometry">
     <rect>
      <x>390</x>
-     <y>100</y>
+     <y>120</y>
      <width>200</width>
      <height>100</height>
     </rect>
@@ -61,6 +61,26 @@
      <width>400</width>
      <height>300</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="testing_2">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>10</y>
+     <width>200</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>스레드 컨트롤</string>
    </property>
   </widget>
  </widget>
