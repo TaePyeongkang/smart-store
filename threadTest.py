@@ -1,8 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import uic, QtWidgets
+from PyQt5 import uic
 from PyQt5.QtCore import *
-import pymysql
 
 thread_form = uic.loadUiType("threading.ui")[0]
 
