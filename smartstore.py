@@ -134,10 +134,10 @@ class SmartStore(QWidget, form_class):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
         cursor = conn.cursor()
         cursor.execute(
-            f"select 원재료명,소모량 from bom where 메뉴 = '{self.order_table.item(self.order_table.currentRow(), 2).text()}'")
+            f"select 원재료명,소모량 from bom where 메뉴 = '{self.order_table.item(self.order_table.rowCount() - 1, 2).text()}'")
         self.bom = cursor.fetchall()
         cursor.execute(
-            f"select * from inventory where 메뉴 = '{self.order_table.item(self.order_table.currentRow(), 2).text()}'")
+            f"select * from inventory where 메뉴 = '{self.order_table.item(self.order_table.rowCount() - 1, 2).text()}'")
         self.inven = cursor.fetchall()
         list_inven = []
         for i in self.inven:
@@ -147,22 +147,24 @@ class SmartStore(QWidget, form_class):
         for recipe in self.bom:
             for i in list_inven:
                 if i[1] == recipe[0]:
-                    i[2] -= recipe[1] * int(self.order_table.item(self.order_table.currentRow(), 3).text())
+                    i[2] -= recipe[1] * int(self.order_table.item(self.order_table.rowCount() - 1, 3).text())
                     if i[2] < 0:
                         no_update = True
         if not no_update:
             for i in list_inven:
                 self.ch_state = '완료'
                 self.state = '준비중'
-                orderitem = self.order_table.item(self.order_table.currentRow(), 0).text()
-                self.order_table.item(self.order_table.currentRow(), 5).setText(self.ch_state)
+                orderitem = self.order_table.item(self.order_table.rowCount() - 1, 0).text()
+                self.order_table.item(self.order_table.rowCount() - 1, 5).setText(self.ch_state)
                 cursor.execute(f"update menu_check set 주문상태 = '{self.ch_state}' where 번호 = '{orderitem}';")
                 cursor.execute("update inventory set 재고량 = %d where 메뉴 = '%s' and 원재료명 = '%s';" % (i[2], i[0], i[1]))
                 conn.commit()
         else:
-            self.order_table.item(self.order_table.currentRow(), 5).setText('재고부족')
+            self.order_table.item(self.order_table.rowCount() - 1, 5).setText('재고부족')
+            self.warning.setText("!")
         if i[2] <= 0:
-            QMessageBox.information(self, "알림", "재고부족")
+            # QMessageBox.information(self, "알림", "재고부족")
+            self.warning.setText("!")
 
         self.inventory()
         a = cursor.execute(f"SELECT * FROM menu_check where 주문상태 = '접수대기'")
@@ -408,6 +410,7 @@ class SmartStore(QWidget, form_class):
         curs = conn.cursor()
         curs.execute("select id, product, question_order, question_title from store.question where checked = '미확인'")
         questions = curs.fetchall()
+        print("흠?")
         self.questions.setRowCount(len(questions))
         for i in range(len(questions)):
             for j in range(len(questions[i])):
@@ -455,16 +458,18 @@ class SmartStore(QWidget, form_class):
         order_num = len(curs.fetchall())
         if complain == 1:
             print("문의가 들어왔다!")
-            curs.execute("insert into store.question values ('%s', '국밥', %d, '%s', '%s', '미확인')" %
-                         (self.userId.text(), order_num, quest_title, quest_text))
+            curs.execute("insert into store.question values ('%s', '%s', %d, '%s', '%s', '미확인')" %
+                         (self.userId.text(), self.order_table.item(self.order_table.rowCount() - 1, 2).text(), order_num, quest_title, quest_text))
             conn.commit()
         self.questAlarm.setText(str(int(self.questAlarm.text()) + 1))
+        print("어라?")
         self.print_questions()
 
     def set_alarm(self):
         conn = pymysql.connect(host='127.0.0.1', user='root', password='486486', db='store')
         curs = conn.cursor()
         curs.execute("select * from store.question where checked = '미확인'")
+        print("여긴가?")
         self.questAlarm.setText(str(len(curs.fetchall())))
         conn.close()
 
@@ -499,6 +504,8 @@ class AutoThread(QThread):
             print("스레드 작동!")
             self.sleep(5)
             self.parent.order_menu()
+            self.sleep(3)
+            self.parent.change_state2()
             self.parent.quest()
             self.count += 1
             print("스레드 작동 완료!")
